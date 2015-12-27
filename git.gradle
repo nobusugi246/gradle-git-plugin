@@ -6,13 +6,13 @@ git {  // <2>
                  'src',
                  'gradle', 'gradlew', 'gradlew.bat']  // <4>
 
-  user_name  = 'nobusugi246'  // <5>
-  user_email = 'xxxx@xxxx.xxxx'  // <6>
+  user_name  = ''  // <5>
+  user_email = ''  // <6>
 
-  remote   = 'https://github.com/nobusugi246/Bootiful-Vaadin-Chat.git'  // <7>
+  remote   = ''  // <7>
   upstream = ''  // <8>
-  acount   = 'nobusugi246'  // <9>
-  password = 'xxxx'  // <10>
+  acount   = ''  // <9>
+  password = ''  // <10>
 
   comment = 'initial commit.'  // <11>
 }
