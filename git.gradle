@@ -11,7 +11,7 @@ git {  // <2>
 
   remote   = ''  // <7>
   upstream = ''  // <8>
-  acount   = ''  // <9>
+  account   = ''  // <9>
   password = ''  // <10>
 
   comment = 'initial commit.'  // <11>
@@ -89,7 +89,7 @@ class JGitPlugin implements Plugin<Project> {
       def git = getGitInstance(project.git.repository)
       git.push()
          .setPushAll()
-         .setCredentialsProvider(new UsernamePasswordCredentialsProvider(project.git.acount, project.git.password))
+         .setCredentialsProvider(new UsernamePasswordCredentialsProvider(project.git.account, project.git.password))
          .call()
     }
 
@@ -191,7 +191,7 @@ class JGitPluginExtension {
   String upstream
   String user_name
   String user_email
-  String acount
+  String account
   String password
   ArrayList<String> filepattern
 }
