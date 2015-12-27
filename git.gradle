@@ -1,0 +1,197 @@
+apply plugin: JGitPlugin  // <1>
+
+git {  // <2>
+  repository = '.'  // <3>
+  filepattern = ['build.gradle', 'README.adoc', 'LICENSE.txt',
+                 'src',
+                 'gradle', 'gradlew', 'gradlew.bat']  // <4>
+
+  user_name  = 'nobusugi246'  // <5>
+  user_email = 'xxxx@xxxx.xxxx'  // <6>
+
+  remote   = 'https://github.com/nobusugi246/Bootiful-Vaadin-Chat.git'  // <7>
+  upstream = ''  // <8>
+  acount   = 'nobusugi246'  // <9>
+  password = 'xxxx'  // <10>
+
+  comment = 'initial commit.'  // <11>
+}
+
+
+// <12>
+// ======== ======== ======== ======== ======== ======== ======== ========
+// -------- -------- -------- -------- -------- -------- -------- --------
+// https://github.com/centic9/jgit-cookbook/tree/master/src/main/java/org/dstadler/jgit
+// http://download.eclipse.org/jgit/site/4.1.1.201511131810-r/apidocs/index.html
+
+buildscript {
+  ext { jgitVersion = '4.1.1.201511131810-r' }
+  repositories { mavenCentral() }
+  dependencies {
+    classpath "org.eclipse.jgit:org.eclipse.jgit:${jgitVersion}"
+    classpath "org.eclipse.jgit:org.eclipse.jgit.ui:${jgitVersion}"
+    classpath "org.eclipse.jgit:org.eclipse.jgit.pgm:${jgitVersion}"
+  }
+}
+
+import java.text.SimpleDateFormat
+import java.util.concurrent.CountDownLatch
+import org.eclipse.jgit.api.Git
+import org.eclipse.jgit.api.ListBranchCommand.ListMode
+import org.eclipse.jgit.lib.ObjectId
+import org.eclipse.jgit.lib.Repository
+import org.eclipse.jgit.lib.RepositoryBuilder
+import org.eclipse.jgit.pgm.Main
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider
+
+class JGitPlugin implements Plugin<Project> {
+  void apply(Project project) {
+    project.extensions.create("git", JGitPluginExtension)
+
+    project.task('initGit') << {
+      Git.init()
+         .setDirectory(new File(project.git.repository))
+         .setBare(false)
+         .call()
+
+      project.tasks.setConfig.execute()
+    }
+
+    project.task('setConfig') << {
+      def git = getGitInstance(project.git.repository)
+      def config = git.getRepository().getConfig()
+      config.setString('user', null, 'name', project.git.user_name)
+      config.setString('user', null, 'email', project.git.user_email)
+      config.setString('remote', 'origin', 'url', project.git.remote)
+      config.setString('remote', 'origin', 'fetch', '+refs/heads/*:refs/remotes/origin/*')
+      config.save()
+    }
+
+    project.task('addFilePattern') << {
+      def git = getGitInstance(project.git.repository)
+      project.git.filepattern.each { fp ->
+        git.add()
+           .addFilepattern(fp)
+           .call()
+      }
+    }
+
+    project.task('commit') << {
+      def git = getGitInstance(project.git.repository)
+      git.commit()
+         .setAll(true)
+         .setMessage(project.git.comment)
+         .call()
+    }
+
+    project.task('push') << {
+      def git = getGitInstance(project.git.repository)
+      git.push()
+         .setPushAll()
+         .setCredentialsProvider(new UsernamePasswordCredentialsProvider(project.git.acount, project.git.password))
+         .call()
+    }
+
+    project.task('initThenPush') << {
+      project.tasks.initGit.execute()
+      project.tasks.addFilePattern.execute()
+      project.tasks.commit.execute()
+      project.tasks.push.execute()
+    }
+
+    project.task('clone') << {
+      def result = Git.cloneRepository()
+                      .setURI(project.git.remote)
+                      .setDirectory(new File(project.git.repository))
+                      .call()
+      println "Result: ${result}"
+      result.getRepository().close()
+    }
+    
+    project.task('fetch') << {
+      def git = getGitInstance(project.git.repository)
+      def result = git.fetch().setCheckFetchedObjects(true).call()
+      println "Result: ${result.getMessages()}"
+    }
+
+    // https://help.github.com/articles/syncing-a-fork/
+    project.task('fetchUpstreamAndMerge') << {
+      def git = getGitInstance(project.git.repository)
+      def config = git.getRepository().getConfig()
+      config.setString('remote', 'upstream', 'url', project.git.upstream)
+      config.setString('remote', 'upstream', 'fetch', '+refs/heads/*:refs/remotes/upstream/*')
+      config.save()
+      def fetchResult = git.fetch()
+                      .setRemote('upstream')
+                      .setCheckFetchedObjects(true).call()
+      println "Fetch Result: ${fetchResult.getMessages()}"
+      
+      def mergeResult = git.merge()
+                           .include(git.getRepository().getRef('upstream/master'))
+                           .call()
+      println "Merge Result: ${mergeResult}"
+    }
+    
+    project.task('tag') << {
+      def git = getGitInstance(project.git.repository)
+      git.tagList().call().each {
+        println "tag: ${it.getName()}"
+      }
+    }
+      
+    project.task('log') << {
+      def git = getGitInstance(project.git.repository)
+      def fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+      git.log().all().call().each {
+        println "${fmt.format(it.getCommitterIdent().getWhen())}  ${it.getShortMessage()}"
+      }
+    }
+
+    project.task('glog') << {
+      def latch = new CountDownLatch(1)
+      def main = new Main()
+      main.execute('glog')
+      latch.await()
+    }
+
+    project.task('branch') << {
+      def git = getGitInstance(project.git.repository)
+      git.branchList().setListMode(ListMode.ALL).call().each {
+        println "Branch: ${it.getName()}"
+      }
+    }
+    
+    project.task('status') << {
+      def git = getGitInstance(project.git.repository)
+      def status = git.status().call();
+      println "Added: " + status.getAdded()
+      println "Changed: " + status.getChanged()
+      println "Conflicting: " + status.getConflicting()
+      println "ConflictingStageState: " + status.getConflictingStageState()
+      println "IgnoredNotInIndex: " + status.getIgnoredNotInIndex()
+      println "Missing: " + status.getMissing()
+      println "Modified: " + status.getModified()
+      println "Removed: " + status.getRemoved()
+      println "Untracked: " + status.getUntracked().size()
+      println "UntrackedFolders: " + status.getUntrackedFolders()
+    }
+  }
+
+  def getGitInstance(String folder) {
+    def repository = new FileRepositoryBuilder().create(new File("$folder/.git"))
+    return new Git(repository)
+  }
+}
+
+class JGitPluginExtension {
+  String repository
+  String comment
+  String remote
+  String upstream
+  String user_name
+  String user_email
+  String acount
+  String password
+  ArrayList<String> filepattern
+}
