@@ -2,19 +2,26 @@ apply plugin: JGitPlugin  // <1>
 
 git {  // <2>
   repository = '.'  // <3>
-  filepattern = ['build.gradle', 'README.adoc', 'LICENSE.txt',
-                 'src',
-                 'gradle', 'gradlew', 'gradlew.bat']  // <4>
+  filepattern = ['']  // <4>
 
-  user_name  = ''  // <5>
+  user_name = ''  // <5>
   user_email = ''  // <6>
 
   remote   = ''  // <7>
   upstream = ''  // <8>
-  account   = ''  // <9>
+  acount = ''  // <9>
   password = ''  // <10>
 
-  comment = 'initial commit.'  // <11>
+  middle = ''  // <11>
+  middleAcount = ''  // <12>
+  middlePassword = ''  // <13>
+
+  comment = ''  // <14>
+}
+
+
+githubFlow {  // <15>
+  feature = ''  // <16>
 }
 
 
@@ -43,12 +50,17 @@ import org.eclipse.jgit.lib.Repository
 import org.eclipse.jgit.lib.RepositoryBuilder
 import org.eclipse.jgit.pgm.Main
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder
+import org.eclipse.jgit.transport.TagOpt
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider
 
 class JGitPlugin implements Plugin<Project> {
   void apply(Project project) {
+    // create DSL of git repositories.
     project.extensions.create("git", JGitPluginExtension)
+    // create DSL of GitHub Flow.
+    project.extensions.create("githubFlow", JGitHubFlowPluginExtension)
 
+    // initialize current folder.
     project.task('initGit') << {
       Git.init()
          .setDirectory(new File(project.git.repository))
@@ -58,6 +70,7 @@ class JGitPlugin implements Plugin<Project> {
       project.tasks.setConfig.execute()
     }
 
+    // set configuration to local repository.
     project.task('setConfig') << {
       def git = getGitInstance(project.git.repository)
       def config = git.getRepository().getConfig()
@@ -65,9 +78,26 @@ class JGitPlugin implements Plugin<Project> {
       config.setString('user', null, 'email', project.git.user_email)
       config.setString('remote', 'origin', 'url', project.git.remote)
       config.setString('remote', 'origin', 'fetch', '+refs/heads/*:refs/remotes/origin/*')
+      config.setString('remote', 'upstream', 'url', project.git.upstream)
+      config.setString('remote', 'upstream', 'fetch', '+refs/heads/*:refs/remotes/upstream/*')
+      config.setString('remote', 'middle', 'url', project.git.middle)
+      config.setString('remote', 'middle', 'fetch', '+refs/heads/*:refs/remotes/middle/*')
       config.save()
     }
 
+    // create a feature branch and checkout it.
+    project.task('branchCreateAndCheckout') << {
+      def git = getGitInstance(project.git.repository)
+      git.branchCreate()
+         .setName(project.githubFlow.feature)
+         .call()
+
+      git.checkout()
+         .setName(project.githubFlow.feature)
+         .call()
+    }
+
+    // add file to current repository.
     project.task('addFilePattern') << {
       def git = getGitInstance(project.git.repository)
       project.git.filepattern.each { fp ->
@@ -77,6 +107,7 @@ class JGitPlugin implements Plugin<Project> {
       }
     }
 
+    // commit to local repository.
     project.task('commit') << {
       def git = getGitInstance(project.git.repository)
       git.commit()
@@ -85,14 +116,16 @@ class JGitPlugin implements Plugin<Project> {
          .call()
     }
 
+    // push to remote repository.
     project.task('push') << {
       def git = getGitInstance(project.git.repository)
       git.push()
          .setPushAll()
-         .setCredentialsProvider(new UsernamePasswordCredentialsProvider(project.git.account, project.git.password))
+         .setCredentialsProvider(new UsernamePasswordCredentialsProvider(project.git.acount, project.git.password))
          .call()
     }
 
+    // initialize current folder, add files, commit them, then push to remote repository.
     project.task('initThenPush') << {
       project.tasks.initGit.execute()
       project.tasks.addFilePattern.execute()
@@ -100,46 +133,101 @@ class JGitPlugin implements Plugin<Project> {
       project.tasks.push.execute()
     }
 
+    // push to middle server.
+    project.task('middlePush') << {
+      println "Push to ${project.git.middle}"
+      def git = getGitInstance(project.git.repository)
+      git.push()
+         .setRemote(project.git.middle)
+         .setPushAll()
+         .setCredentialsProvider(new UsernamePasswordCredentialsProvider(project.git.middleAcount,
+                                                                         project.git.middlePassword))
+         .call()
+    }
+
+    // fetch from middle server and merge them.
+    project.task('middleFetchAndMerge') << {
+      println "Fetch from ${project.git.middle}"
+      def git = getGitInstance(project.git.repository)
+      def result = git.fetch()
+                      .setRemote('middle')
+                      .setCheckFetchedObjects(true)
+                      .setTagOpt(TagOpt.AUTO_FOLLOW)
+                      .call()
+      println "Result: ${result.getMessages()}"
+
+      println ''
+      println 'Merge middle/master'
+      def mergeResult = git.merge()
+                           .include(git.getRepository().getRef('middle/master'))
+                           .call()
+      println "Result: ${mergeResult}"
+    }
+
+    // clone remote repository.
     project.task('clone') << {
+      println "Clone from ${project.git.remote}"
       def result = Git.cloneRepository()
                       .setURI(project.git.remote)
                       .setDirectory(new File(project.git.repository))
                       .call()
       println "Result: ${result}"
       result.getRepository().close()
+      project.tasks.setConfig.execute()
     }
-    
+
+    // clone upstream repository.
+    project.task('cloneUpstream') << {
+      println "Clone from ${project.git.upstream}"
+      def result = Git.cloneRepository()
+                      .setURI(project.git.upstream)
+                      .setDirectory(new File(project.git.repository))
+                      .call()
+      println "Result: ${result}"
+      result.getRepository().close()
+      project.tasks.setConfig.execute()
+    }
+
+    // fetch remote repository.
     project.task('fetch') << {
+      println "Fetch from ${project.git.remote}"
       def git = getGitInstance(project.git.repository)
-      def result = git.fetch().setCheckFetchedObjects(true).call()
+      def result = git.fetch()
+                      .setCheckFetchedObjects(true)
+                      .setTagOpt(TagOpt.AUTO_FOLLOW)
+                      .call()
       println "Result: ${result.getMessages()}"
     }
 
+    // sync a fork.
     // https://help.github.com/articles/syncing-a-fork/
     project.task('fetchUpstreamAndMerge') << {
+      println "Fetch from ${project.git.upstream}"
       def git = getGitInstance(project.git.repository)
-      def config = git.getRepository().getConfig()
-      config.setString('remote', 'upstream', 'url', project.git.upstream)
-      config.setString('remote', 'upstream', 'fetch', '+refs/heads/*:refs/remotes/upstream/*')
-      config.save()
       def fetchResult = git.fetch()
-                      .setRemote('upstream')
-                      .setCheckFetchedObjects(true).call()
-      println "Fetch Result: ${fetchResult.getMessages()}"
+                           .setRemote('upstream')
+                           .setCheckFetchedObjects(true)
+                           .setTagOpt(TagOpt.AUTO_FOLLOW)
+                           .call()
+      println "Result: ${fetchResult.getMessages()}"
       
+      println ''
+      println 'Merge upstream/master'
       def mergeResult = git.merge()
                            .include(git.getRepository().getRef('upstream/master'))
                            .call()
-      println "Merge Result: ${mergeResult}"
+      println "Result: ${mergeResult}"
     }
     
+    // display tags.
     project.task('tag') << {
       def git = getGitInstance(project.git.repository)
       git.tagList().call().each {
         println "tag: ${it.getName()}"
       }
     }
-      
+
+    // display text log.
     project.task('log') << {
       def git = getGitInstance(project.git.repository)
       def fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -148,6 +236,7 @@ class JGitPlugin implements Plugin<Project> {
       }
     }
 
+    // display graphical log of local git repository.
     project.task('glog') << {
       def latch = new CountDownLatch(1)
       def main = new Main()
@@ -155,13 +244,15 @@ class JGitPlugin implements Plugin<Project> {
       latch.await()
     }
 
+    // display existing branches.
     project.task('branch') << {
       def git = getGitInstance(project.git.repository)
       git.branchList().setListMode(ListMode.ALL).call().each {
         println "Branch: ${it.getName()}"
       }
     }
-    
+
+    // display status of local repository.
     project.task('status') << {
       def git = getGitInstance(project.git.repository)
       def status = git.status().call();
@@ -178,12 +269,14 @@ class JGitPlugin implements Plugin<Project> {
     }
   }
 
+  // get Git instance of current folder.
   def getGitInstance(String folder) {
     def repository = new FileRepositoryBuilder().create(new File("$folder/.git"))
     return new Git(repository)
   }
 }
 
+// DSL Class of git repositories.
 class JGitPluginExtension {
   String repository
   String comment
@@ -191,7 +284,15 @@ class JGitPluginExtension {
   String upstream
   String user_name
   String user_email
-  String account
+  String acount
   String password
+  String middle
+  String middleAcount
+  String middlePassword
   ArrayList<String> filepattern
+}
+
+// DSL Class of GitHub Flow.
+class JGitHubFlowPluginExtension {
+  String feature
 }
