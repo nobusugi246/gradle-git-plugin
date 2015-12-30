@@ -8,7 +8,7 @@ handling git repositories in some typical Use Cases.
 == Use Cases
 
 .Big Picture of "typical Use Cases".
-image::https://raw.githubusercontent.com/nobusugi246/.png[]
+image::https://raw.githubusercontent.com/nobusugi246/[]
 
 * Initialize local git repository, add project files, commit them,
   push to remote repository.
