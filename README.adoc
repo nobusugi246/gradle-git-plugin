@@ -8,7 +8,9 @@ handling git repositories in some typical Use Cases.
 == Use Cases
 
 .Big Picture of "typical Use Cases".
-image::https://raw.githubusercontent.com/nobusugi246/[]
+image::https://raw.githubusercontent.com/nobusugi246/gradle-jgit-plugin/master/readme_images/TypicalUseCase.png[]
+
+This DSL covers below.
 
 * Initialize local git repository, add project files, commit them,
   push to remote repository.
