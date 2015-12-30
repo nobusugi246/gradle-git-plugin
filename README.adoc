@@ -8,7 +8,7 @@ handling git repositories in some typical Use Cases.
 == Use Cases
 
 .Big Picture of "typical Use Cases".
-image::https://raw.githubusercontent.com/nobusugi246/gradle-jgit-plugin/master/readme_images/TypicalUseCase.png[]
+image::https://raw.githubusercontent.com/nobusugi246/gradle-jgit-plugin/master/readme_images/TypicalUseCase.png[width=640]
 
 This DSL covers below.
 
