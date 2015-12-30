@@ -12,6 +12,8 @@ handling git repositories in some Use Cases.
 .Big Picture of "Typical Use Case".
 image::https://raw.githubusercontent.com/nobusugi246/gradle-jgit-plugin/master/readme_images/TypicalUseCase.png[width=640]
 
+"fork"により開発を初める場合。
+
 * (1) GitHubやGitBucket等のレポジトリにて、
   機能拡張や不具合修正するオリジナルのレポジトリ(Original Repository)を
   forkし、自分のレポジトリ(My Repository)を作成する。
@@ -19,15 +21,19 @@ image::https://raw.githubusercontent.com/nobusugi246/gradle-jgit-plugin/master/r
   ローカルレポジトリ(Local Repository)を作成する。
 * (3) 機能拡張や不具合修正を行なうための branchを作成する。(GitHub Flowを想定)
 * (4)(5) 修正や新規追加したファイルを addし、commitする。
-* (6) 広く公開する前に、プライベートなサーバに pushし、公開して問題ない内容か確認する。
+* (6) 広く公開する前に、プライベートなサーバに pushし、公開して問題無い内容か確認する。
   または、プロジェクトメンバによりレビューを行なう。
-  (必要に応じて pull requestを発行する)
+  (必要に応じて pull requestをプライベート・サーバで発行する)
 * (7)(8) 他のプロジェクトメンバからの pushがあれば、それを fetchし mergeする。
   または、他のメンバから pull requestがあれば mergeする。
 * (9) 問題が無ければ、公開するために pushする。
 * (10)(8) オリジナルのレポジトリ(Original Repository)で
   修正・更新されたコードを取り込むために、fetchし mergeする。
-* (11)(4)(5)(6)(9) 新規に開発したコードを公開する場合は、
+
+新規に開発したコードを公開する場合。
+
+* (11)(4)(5)(6)(9) GitHub(またはGitBucket等)には空のレポジトリを作成しておく。
+  作成したコードを対象として、
   ローカルにレポジトリを作成(init)し、ファイルの追加(add)、登録(commit)、
   プライベートなサーバに pushして確認、問題無ければ公開(push)する。
 
