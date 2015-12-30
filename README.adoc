@@ -1,19 +1,21 @@
-= Gradle DSL and Tasks for handling git repositories in some typical Use Case.
+= Gradle DSL and Tasks for handling git repositories in some Use Cases.
 :example-caption: List
 
 This Gradle Plugin has a DSL(Domain Specific Language) and Tasks for
-handling git repositories in some typical Use Case.
+handling git repositories in some Use Cases.
 
 
-== Typical Use Case
+== Use Cases
 
-この Gradle DSLが想定している、"典型的なユースケース"について説明する。
+この DSLが想定している、"典型的なユースケース"について説明する。
 
 .Big Picture of "Typical Use Case".
 image::https://raw.githubusercontent.com/nobusugi246/gradle-jgit-plugin/master/readme_images/TypicalUseCase.png[width=640]
 
-* (1) 
-* (2)
+* (1) GitHubやGitBucket等のレポジトリにて、
+      機能拡張や不具合修正するオリジナルのレポジトリ(Original Repository)を
+      forkし、自分のレポジトリ(My Repository)を作成する。
+* (2) 
 * (3)
 * (4)
 * (5)
