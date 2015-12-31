@@ -21,7 +21,7 @@ GitHub Flowは小さいチームに別れて行なうWebアプリケーション
 この DSLが想定しているユースケースについて説明します。
 
 .Big Picture of a Use Case.
-image::https://raw.githubusercontent.com/nobusugi246/gradle-jgit-plugin/master/readme_images/aUseCase.png[width=640]
+image::https://raw.githubusercontent.com/nobusugi246/gradle-jgit-plugin/master/readme_images/aUseCase.png[width=700]
 
 "fork"により開発を初める場合。
 
