@@ -50,6 +50,7 @@ image::https://raw.githubusercontent.com/nobusugi246/gradle-jgit-plugin/master/r
 
 この DSLの記載例を以下に示します。
 
+[source, groovy]
 .Example of DSL definitions(1).
 ====
 ----
@@ -71,6 +72,10 @@ git {
 
   comment = ''  // <12>
 }
+
+githubFlow {
+  topic = ''  // <13>
+}
 ----
 <1> ローカルレポジトリを作成するフォルダ名
 <2> fork/cloneする場合は不要。ファイルの追加/修正した時に、そのファイル名やフォルダを指定する。
@@ -84,6 +89,7 @@ git {
 <10> プライベートな Gitサーバのアカウント名
 <11> プライベートな Gitサーバのパスワード
 <12> commitするときのコメント。随時、commit時に記載する。
+<13> branchを作成するときの branch名
 ====
 
 
