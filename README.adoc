@@ -44,8 +44,8 @@ image::https://raw.githubusercontent.com/nobusugi246/gradle-jgit-plugin/master/r
 
 * (11)(4)(5)(6)(9) GitHub(またはGitBucket等)には空のレポジトリを作成しておく。
   作成したコードを対象として、
-  ローカルにレポジトリを作成(init)し、ファイルの追加(add)、登録(commit)、
-  プライベートなサーバに pushして確認、問題無ければ公開(push)する。
+  ローカルにレポジトリを作成((11) init)し、ファイルの追加((4) add)、登録((5) commit)、
+  プライベートなサーバに(6) pushして確認、問題無ければ公開((9) push)する。
 
 This DSL covers below.
 
