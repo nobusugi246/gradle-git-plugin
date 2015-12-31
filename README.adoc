@@ -96,7 +96,7 @@ At first, you needs a environment that you can execute gradle or gradlew command
 
 タスクの実行は、gradleまたは gradlewコマンドを実行できる環境で、行なってください。
 
-.Clone My Repository from GitHub.
+.Clone My Repository from GitHub. (b)
 ====
 ----
 $ gradle --daemon -b git.gradle clone
@@ -104,7 +104,7 @@ $ gradle --daemon -b git.gradle clone
 ====
 
 
-.Push to Private Git Server.
+.Push to Private Git Server. (f)
 ====
 ----
 $ gradle --daemon -b git.gradle middlePush
@@ -112,7 +112,7 @@ $ gradle --daemon -b git.gradle middlePush
 ====
 
 
-.Clone and push to Private Git Server.
+.Clone and push to Private Git Server. (b)(f)
 ====
 ----
 $ gradle --daemon -b git.gradle clone middlePush
@@ -120,8 +120,7 @@ $ gradle --daemon -b git.gradle clone middlePush
 ====
 
 
-
-.Sync a fork. (Fetch upstream repository(Original Repository) and merge it.)
+.Sync a fork. (Fetch upstream repository(Original Repository) and merge it.) (j)(h)
 ====
 ----
 $ gradle --daemon -b git.gradle sync
@@ -129,15 +128,7 @@ $ gradle --daemon -b git.gradle sync
 ====
 
 
-.Initialize, add, commit, push to GitHub Server.
-====
-----
-$ gradle --daemon -b git.gradle initTP  (abbrev. of "initThenPush")
-----
-====
-
-
-.Initialize, add, commit, push to Private Git Server.
+.Initialize, add, commit, push to Private Git Server. (k)(d)(e)(f)
 ====
 ----
 $ gradle --daemon -b git.gradle initG add commit middlePush
@@ -145,10 +136,18 @@ $ gradle --daemon -b git.gradle initG add commit middlePush
 ====
 
 
-.Add, commit, push to Private Git Server.
+.Initialize, add, commit, push to GitHub Server. (k)(d)(e)(i)
 ====
 ----
-$ gradle --daemon -b git.gradle add commit middlePush
+$ gradle --daemon -b git.gradle initTP  (abbrev. of "initThenPush")
+----
+====
+
+
+.Push to Github Server. (i)
+====
+----
+$ gradle --daemon -b git.gradle push
 ----
 ====
 
