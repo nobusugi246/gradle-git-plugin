@@ -74,7 +74,7 @@ git {
 }
 
 githubFlow {
-  topic = 'NewFeature'  // <13>
+  topic = 'feature_xx'  // <13>
 }
 ----
 <1> ローカルレポジトリを作成するフォルダ名
