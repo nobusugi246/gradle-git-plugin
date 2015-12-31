@@ -1,31 +1,30 @@
-apply plugin: JGitPlugin  // <1>
+apply plugin: JGitPlugin
 
-git {  // <2>
-  repository = '.'  // <3>
-  filepattern = ['']  // <4>
+git {
+  repository = '.'
+  filepattern = ['']
 
-  user_name = ''  // <5>
-  user_email = ''  // <6>
+  user_name = ''
+  user_email = ''
 
-  remote   = ''  // <7>
-  upstream = ''  // <8>
-  acount = ''  // <9>
-  password = ''  // <10>
+  remote   = ''
+  upstream = ''
+  acount = ''
+  password = ''
 
-  middle = ''  // <11>
-  middleAcount = ''  // <12>
-  middlePassword = ''  // <13>
+  middle = ''
+  middleAcount = ''
+  middlePassword = ''
 
-  comment = ''  // <14>
+  comment = ''
 }
 
 
-githubFlow {  // <15>
-  topic = ''  // <16>
+githubFlow {
+  topic = ''
 }
 
 
-// <17>
 // ======== ======== ======== ======== ======== ======== ======== ========
 // -------- -------- -------- -------- -------- -------- -------- --------
 // https://github.com/centic9/jgit-cookbook/tree/master/src/main/java/org/dstadler/jgit
@@ -100,7 +99,7 @@ class JGitPlugin implements Plugin<Project> {
     }
     project.tasks.branchCreateAndCheckout.description = 'Creates a topic branch and checkouts it.'
 
-    // Add file to current repository.
+    // Add files to current repository.
     project.task('addFilePattern') << {
       def git = getGitInstance(project.git.repository)
       project.git.filepattern.each { fp ->
@@ -109,7 +108,7 @@ class JGitPlugin implements Plugin<Project> {
            .call()
       }
     }
-    project.tasks.addFilePattern.description = 'Add file to current repository.'
+    project.tasks.addFilePattern.description = 'Add files to current repository.'
 
     // Commits to local repository.
     project.task('commit') << {
