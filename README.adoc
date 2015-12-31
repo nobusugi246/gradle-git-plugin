@@ -25,28 +25,28 @@ image::https://raw.githubusercontent.com/nobusugi246/gradle-jgit-plugin/master/r
 
 "fork"により開発を初める場合。
 
-* (1) GitHubやGitBucket等のレポジトリにて、
+* (a) GitHubやGitBucket等のレポジトリにて、
   機能拡張や不具合修正の対象となる、オリジナルのレポジトリ(Original Repository)を forkし、
   自分のレポジトリ(My Repository)を作成する。
-* (2) 自分のレポジトリ(My Repository)を、cloneして
+* (b) 自分のレポジトリ(My Repository)を、cloneして
   ローカルレポジトリ(Local Repository)を作成する。
-* (3) 機能拡張や不具合修正を行なうための branchを作成する。(GitHub Flowを想定)
-* (4)(5) 修正や新規追加したファイルを addし、commitする。
-* (6) 広く公開する前に、プライベートなサーバに pushし、公開して問題無い内容か確認する。
+* (c) 機能拡張や不具合修正を行なうための branchを作成する。(GitHub Flowを想定)
+* (d)(e) 修正や新規追加したファイルを addし、commitする。
+* (f) 広く公開する前に、プライベートなサーバに pushし、公開して問題無い内容か確認する。
   または、プロジェクトメンバによりレビューを行なう。
   (必要に応じて pull requestをプライベート・サーバで発行する)
-* (7)(8) 他のプロジェクトメンバからの pushがあれば、それを fetchし mergeする。
+* (g)(h) 他のプロジェクトメンバからの pushがあれば、それを fetchし mergeする。
   または、他のメンバから pull requestがあれば mergeする。
-* (9) 問題が無ければ、公開するために pushする。
-* (10)(8) オリジナルのレポジトリ(Original Repository)で、
+* (i) 問題が無ければ、公開するために pushする。
+* (j)(h) オリジナルのレポジトリ(Original Repository)で、
   修正・更新されたコードを取り込むために、fetchし mergeする。
 
 新規に開発したコードを公開する場合。
 
-* (11)(4)(5)(6)(9) GitHub(またはGitBucket等)には空のレポジトリを作成しておく。
-  ローカルで作成したコードを対象に、レポジトリを作成((11) init)し、
-  ファイルの追加((4) add)、登録((5) commit)、
-  プライベートなサーバに(6) pushして確認、問題無ければ公開((9) push)する。
+* (k)(d)(e)(f)(i) GitHub(またはGitBucket等)には空のレポジトリを作成しておく。
+  ローカルで作成したコードを対象に、レポジトリを作成((k) init)し、
+  ファイルの追加((d) add)、登録((e) commit)、
+  プライベートなサーバに(f) pushして確認、問題無ければ公開((i) push)する。
 
 この DSLの記載例を以下に示します。
 
@@ -74,11 +74,11 @@ git {
 }
 
 githubFlow {
-  topic = ''  // <13>
+  topic = 'NewFeature'  // <13>
 }
 ----
 <1> ローカルレポジトリを作成するフォルダ名
-<2> fork/cloneする場合は不要。ファイルの追加/修正した時に、そのファイル名やフォルダを指定する。
+<2> fork/cloneする時は不要。ファイルの追加/修正した時に、そのファイル名やフォルダを指定する。
 <3> gitのユーザ名
 <4> gitのメールアドレス
 <5> forkした、cloneの対象のレポジトリ(My Repository)への URL
@@ -92,27 +92,29 @@ githubFlow {
 <13> branchを作成するときの branch名
 ====
 
-
-
-== How to use / 利用方法
-
 At first, you needs a environment that you can execute gradle or gradlew commands.
 
-gradleまたは gradlewコマンドを実行できる環境で、ご利用ください。
+タスクの実行は、gradleまたは gradlewコマンドを実行できる環境で、行なってください。
+
+.Clone My Repository from GitHub.
+====
+----
+$ gradle --daemon -b git.gradle clone
+----
+====
+
+.Sync a fork
+====
+----
+$ gradle --daemon -b git.gradle fetchUAM  (abbrev. of "fetchUpstreamAndMerge")
+----
+====
 
 
 .Initialize, add, commit, push
 ====
 ----
-$ gradle -b git.gradle initTP  (abbrev. of "initThenPush")
-----
-====
-
-
-.Sync a fork
-====
-----
-$ gradle -b git.gradle fetchUAM  (abbrev. of "fetchUpstreamAndMerge")
+$ gradle --daemon -b git.gradle initTP  (abbrev. of "initThenPush")
 ----
 ====
 
