@@ -148,7 +148,7 @@ image::https://raw.githubusercontent.com/nobusugi246/gradle-jgit-plugin/master/r
 この DSLの記載例を以下に示します。
 
 [source, groovy]
-.Example of DSL definitions(1).
+.Example of DSL definitions(2).
 ====
 ----
 git {
