@@ -55,12 +55,12 @@ import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider
 
 class JGitPlugin implements Plugin<Project> {
   void apply(Project project) {
-    // create DSL of git repositories.
+    // creates DSL of git repositories.
     project.extensions.create("git", JGitPluginExtension)
-    // create DSL of GitHub Flow.
+    // creates DSL of GitHub Flow.
     project.extensions.create("githubFlow", JGitHubFlowPluginExtension)
 
-    // initialize current folder.
+    // initializes current folder.
     project.task('initGit') << {
       Git.init()
          .setDirectory(new File(project.git.repository))
@@ -69,8 +69,9 @@ class JGitPlugin implements Plugin<Project> {
 
       project.tasks.setConfig.execute()
     }
+    project.tasks.initGit.description = 'Initializes current folder as a local repository.'
 
-    // set configuration to local repository.
+    // Set configuration to local repository.
     project.task('setConfig') << {
       def git = getGitInstance(project.git.repository)
       def config = git.getRepository().getConfig()
@@ -84,8 +85,9 @@ class JGitPlugin implements Plugin<Project> {
       config.setString('remote', 'middle', 'fetch', '+refs/heads/*:refs/remotes/middle/*')
       config.save()
     }
+    project.tasks.setConfig.description = 'Set configuration to local repository.'
 
-    // create a topic branch and checkout it.
+    // Creates a topic branch and checkouts it.
     project.task('branchCreateAndCheckout') << {
       def git = getGitInstance(project.git.repository)
       git.branchCreate()
@@ -96,8 +98,9 @@ class JGitPlugin implements Plugin<Project> {
          .setName(project.githubFlow.topic)
          .call()
     }
+    project.tasks.branchCreateAndCheckout.description = 'Creates a topic branch and checkouts it.'
 
-    // add file to current repository.
+    // Add file to current repository.
     project.task('addFilePattern') << {
       def git = getGitInstance(project.git.repository)
       project.git.filepattern.each { fp ->
@@ -106,8 +109,9 @@ class JGitPlugin implements Plugin<Project> {
            .call()
       }
     }
+    project.tasks.addFilePattern.description = 'Add file to current repository.'
 
-    // commit to local repository.
+    // Commits to local repository.
     project.task('commit') << {
       def git = getGitInstance(project.git.repository)
       git.commit()
@@ -115,8 +119,9 @@ class JGitPlugin implements Plugin<Project> {
          .setMessage(project.git.comment)
          .call()
     }
+    project.tasks.commit.description = 'Commits to local repository.'
 
-    // push to remote repository.
+    // Pushes to remote repository.
     project.task('push') << {
       def git = getGitInstance(project.git.repository)
       git.push()
@@ -124,6 +129,7 @@ class JGitPlugin implements Plugin<Project> {
          .setCredentialsProvider(new UsernamePasswordCredentialsProvider(project.git.acount, project.git.password))
          .call()
     }
+    project.tasks.push.description = 'Pushes to remote repository.'
 
     // initialize current folder, add files, commit them, then push to remote repository.
     project.task('initThenPush') << {
@@ -132,8 +138,9 @@ class JGitPlugin implements Plugin<Project> {
       project.tasks.commit.execute()
       project.tasks.push.execute()
     }
+    project.tasks.initThenPush.description = 'Initializes local repository then pushes to remote repository.'
 
-    // push to middle server.
+    // Pushes to middle server.
     project.task('middlePush') << {
       println "Push to ${project.git.middle}"
       def git = getGitInstance(project.git.repository)
@@ -144,8 +151,9 @@ class JGitPlugin implements Plugin<Project> {
                                                                          project.git.middlePassword))
          .call()
     }
+    project.tasks.middlePush.description = 'Pushes to middle server.'
 
-    // fetch from middle server and merge them.
+    // Fetches from middle server and merge it.
     project.task('middleFetchAndMerge') << {
       println "Fetch from ${project.git.middle}"
       def git = getGitInstance(project.git.repository)
@@ -163,8 +171,9 @@ class JGitPlugin implements Plugin<Project> {
                            .call()
       println "Result: ${mergeResult}"
     }
+    project.tasks.middleFetchAndMerge.description = 'Fetches from middle server and merge it.'
 
-    // clone remote repository.
+    // Clones remote repository.
     project.task('clone') << {
       println "Clone from ${project.git.remote}"
       def result = Git.cloneRepository()
@@ -175,8 +184,9 @@ class JGitPlugin implements Plugin<Project> {
       result.getRepository().close()
       project.tasks.setConfig.execute()
     }
+    project.tasks.clone.description = 'Clones remote repository.'
 
-    // clone upstream repository.
+    // Clones upstream repository.
     project.task('cloneUpstream') << {
       println "Clone from ${project.git.upstream}"
       def result = Git.cloneRepository()
@@ -187,8 +197,9 @@ class JGitPlugin implements Plugin<Project> {
       result.getRepository().close()
       project.tasks.setConfig.execute()
     }
+    project.tasks.cloneUpstream.description = 'Clones upstream repository.'
 
-    // fetch remote repository.
+    // Fetches remote repository.
     project.task('fetch') << {
       println "Fetch from ${project.git.remote}"
       def git = getGitInstance(project.git.repository)
@@ -198,6 +209,7 @@ class JGitPlugin implements Plugin<Project> {
                       .call()
       println "Result: ${result.getMessages()}"
     }
+    project.tasks.fetch.description = 'Fetches remote repository.'
 
     // sync a fork.
     // https://help.github.com/articles/syncing-a-fork/
@@ -218,6 +230,12 @@ class JGitPlugin implements Plugin<Project> {
                            .call()
       println "Result: ${mergeResult}"
     }
+    project.tasks.fetchUpstreamAndMerge.description = 'Fetches from Original Repository and merge it.'
+
+    project.task('sync') << {
+      project.tasks.fetchUpstreamAndMerge.execute()
+    }
+    project.tasks.sync.description = 'Sync a fork.'
     
     // display tags.
     project.task('tag') << {
@@ -226,6 +244,7 @@ class JGitPlugin implements Plugin<Project> {
         println "tag: ${it.getName()}"
       }
     }
+    project.tasks.tag.description = 'Displays tags.'
 
     // display text log.
     project.task('log') << {
@@ -235,6 +254,7 @@ class JGitPlugin implements Plugin<Project> {
         println "${fmt.format(it.getCommitterIdent().getWhen())}  ${it.getShortMessage()}"
       }
     }
+    project.tasks.log.description = 'Displays text log.'
 
     // display graphical log of local git repository.
     project.task('glog') << {
@@ -243,6 +263,7 @@ class JGitPlugin implements Plugin<Project> {
       main.execute('glog')
       latch.await()
     }
+    project.tasks.glog.description = 'Displays graphical log.'
 
     // display existing branches.
     project.task('branch') << {
@@ -251,6 +272,7 @@ class JGitPlugin implements Plugin<Project> {
         println "Branch: ${it.getName()}"
       }
     }
+    project.tasks.branch.description = 'Displays branch(es).'
 
     // display status of local repository.
     project.task('status') << {
@@ -267,6 +289,7 @@ class JGitPlugin implements Plugin<Project> {
       println "Untracked: " + status.getUntracked().size()
       println "UntrackedFolders: " + status.getUntrackedFolders()
     }
+    project.tasks.status.description = 'Displays status.'
   }
 
   // get Git instance of current folder.

@@ -145,6 +145,14 @@ $ gradle --daemon -b git.gradle initG add commit middlePush
 ====
 
 
+.Add, commit, push to Private Git Server.
+====
+----
+$ gradle --daemon -b git.gradle add commit middlePush
+----
+====
+
+
 
 == License / ライセンス
 
