@@ -7,7 +7,13 @@ handling git repositories in some Use Cases.
 
 == Use Cases
 
-この DSLが想定している、"典型的なユースケース"について説明する。
+Gitは柔軟で強力な分散バージョン管理ツールですが、
+それだけに実際の開発ではどのように利用するか、運用ルールを決める必要があります。
+
+Gitによる開発のベストプラクティスとしては、
+Git Flow、GitHub Flow、GitLab Flowなどが有名です。
+
+この DSLが想定している、"典型的なユースケース"について説明します。
 
 .Big Picture of "Typical Use Case".
 image::https://raw.githubusercontent.com/nobusugi246/gradle-jgit-plugin/master/readme_images/TypicalUseCase.png[width=640]

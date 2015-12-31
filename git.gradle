@@ -21,11 +21,11 @@ git {  // <2>
 
 
 githubFlow {  // <15>
-  feature = ''  // <16>
+  topic = ''  // <16>
 }
 
 
-// <12>
+// <17>
 // ======== ======== ======== ======== ======== ======== ======== ========
 // -------- -------- -------- -------- -------- -------- -------- --------
 // https://github.com/centic9/jgit-cookbook/tree/master/src/main/java/org/dstadler/jgit
@@ -85,15 +85,15 @@ class JGitPlugin implements Plugin<Project> {
       config.save()
     }
 
-    // create a feature branch and checkout it.
+    // create a topic branch and checkout it.
     project.task('branchCreateAndCheckout') << {
       def git = getGitInstance(project.git.repository)
       git.branchCreate()
-         .setName(project.githubFlow.feature)
+         .setName(project.githubFlow.topic)
          .call()
 
       git.checkout()
-         .setName(project.githubFlow.feature)
+         .setName(project.githubFlow.topic)
          .call()
     }
 
@@ -294,5 +294,5 @@ class JGitPluginExtension {
 
 // DSL Class of GitHub Flow.
 class JGitHubFlowPluginExtension {
-  String feature
+  String topic
 }
