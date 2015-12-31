@@ -121,7 +121,7 @@ $ gradle --daemon -b git.gradle clone middlePush
 
 
 
-.Sync a fork. (Fetch upstream repository and merge it.)
+.Sync a fork. (Fetch upstream repository(Original Repository) and merge it.)
 ====
 ----
 $ gradle --daemon -b git.gradle sync
