@@ -103,6 +103,24 @@ $ gradle --daemon -b git.gradle clone
 ----
 ====
 
+
+.Push to Private Git Server.
+====
+----
+$ gradle --daemon -b git.gradle middlePush
+----
+====
+
+
+.Clone and push to Private Git Server.
+====
+----
+$ gradle --daemon -b git.gradle clone middlePush
+----
+====
+
+
+
 .Sync a fork
 ====
 ----
@@ -111,10 +129,18 @@ $ gradle --daemon -b git.gradle fetchUAM  (abbrev. of "fetchUpstreamAndMerge")
 ====
 
 
-.Initialize, add, commit, push
+.Initialize, add, commit, push to GitHub Server.
 ====
 ----
 $ gradle --daemon -b git.gradle initTP  (abbrev. of "initThenPush")
+----
+====
+
+
+.Initialize, add, commit, push to Private Git Server.
+====
+----
+$ gradle --daemon -b git.gradle initG add commit middlePush
 ----
 ====
 
