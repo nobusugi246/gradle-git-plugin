@@ -16,6 +16,7 @@ Git Flow、GitLab Flow、GitHub Flowなどが有名です。
 Git Flowは大規模な開発、運用を長期的に行う場合に向いているようです。
 GitLab Flowは中・小規模で、iOS/Androidアプリケーションなどの開発に、
 GitHub Flowは小さいチームに別れて行なうWebアプリケーションの開発に向いているようです。
+詳細は最後の URLを参照してください。
 
 この DSLが想定しているユースケースについて説明します。
 
@@ -43,17 +44,37 @@ image::https://raw.githubusercontent.com/nobusugi246/gradle-jgit-plugin/master/r
 新規に開発したコードを公開する場合。
 
 * (11)(4)(5)(6)(9) GitHub(またはGitBucket等)には空のレポジトリを作成しておく。
-  作成したコードを対象として、
-  ローカルにレポジトリを作成((11) init)し、ファイルの追加((4) add)、登録((5) commit)、
+  ローカルで作成したコードを対象に、レポジトリを作成((11) init)し、
+  ファイルの追加((4) add)、登録((5) commit)、
   プライベートなサーバに(6) pushして確認、問題無ければ公開((9) push)する。
 
-This DSL covers below.
+この DSLでは以下の定義を行ないます。
 
-* Initialize local git repository, add project files, commit them,
-  push to remote repository.
-* On Github / GitBucket / and so on,
-  sync a fork of a repository to keep it up-to-date with the upstream repository.
-** https://help.github.com/articles/syncing-a-fork/
+.Example of DSL definitions.
+====
+----
+git {
+  repository = 'gitbucket'  // <1>
+  filepattern = ['']  // <2>
+
+  user_name = 'nobusugi246'  // <3>
+  user_email = 'xxx@xxx.xxx'  // <4>
+
+  remote   = 'https://github.com/nobusugi246/gitbucket.git'  // <5>
+  upstream = 'https://github.com/gitbucket/gitbucket.git'  // <6>
+  acount = 'nobusugi246'  // <7>
+  password = 'xxx'  // <8>
+
+  middle = 'http://localhost:8080/git/xxx/gitbucket.git'  // <9>
+  middleAcount = 'xxx'  // <10>
+  middlePassword = 'xxx'  // <11>
+
+  comment = ''  // <12>
+}
+----
+<1> 
+====
+
 
 
 == How to use / 利用方法
@@ -90,13 +111,13 @@ Apache License Version 2.0
 This Gradle Plugin is based on URLs below.
 
 
-=== about jgit
+=== About jgit
 
 * https://github.com/centic9/jgit-cookbook
 * http://download.eclipse.org/jgit/site/4.1.1.201511131810-r/apidocs/index.html
 
 
-=== syncing a fork on GitHub
+=== Syncing a fork
 
 * https://help.github.com/articles/syncing-a-fork/
 
