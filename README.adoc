@@ -23,7 +23,7 @@ GitHub Flowは小さいチームに別れて行なうWebアプリケーション
 .Big Picture of a Use Case.
 image::https://raw.githubusercontent.com/nobusugi246/gradle-jgit-plugin/master/readme_images/aUseCase.png[width=700]
 
-"fork"により開発を初める場合。
+"fork"により開発を初める場合となる。
 
 * (a) GitHubやGitBucket等のレポジトリにて、
   機能拡張や不具合修正の対象となる、オリジナルのレポジトリ(Original Repository)を forkし、
@@ -132,7 +132,7 @@ $ gradle --daemon -b git.gradle sync
 .Big Picture of another Use Case.
 image::https://raw.githubusercontent.com/nobusugi246/gradle-jgit-plugin/master/readme_images/anotherUseCase.png[width=700]
 
-新規に開発したコードを公開する場合。
+新規に開発したコードを公開する場合となる。
 
 * GitHub(またはGitBucket等)には空のレポジトリを作成しておく。
   ローカルで作成したコードを対象に、レポジトリを作成((a) init)し、
@@ -145,6 +145,49 @@ image::https://raw.githubusercontent.com/nobusugi246/gradle-jgit-plugin/master/r
 * ローカルレポジトリで機能開発や不具合修正は、
   (i) branchを作成して行なう。(GitHub Flow等)
 
+この DSLの記載例を以下に示します。
+
+[source, groovy]
+.Example of DSL definitions(1).
+====
+----
+git {
+  repository = '.'  // <1>
+  filepattern = ['git.gradle', 'README.adoc', 'LICENSE-2.0.txt', 'readme_images']  // <2>
+
+  user_name = 'nobusugi246'  // <3>
+  user_email = 'xxx@xxx.xxx'  // <4>
+
+  remote   = 'https://github.com/nobusugi246/gradle-jgit-plugin.git'  // <5>
+  upstream = ''  // <6>
+  acount = 'nobusugi246'  // <7>
+  password = 'xxx'  // <8>
+
+  middle = 'http://localhost:8080/git/xxx/gradle-jgit-plugin.git'  // <9>
+  middleAcount = 'xxx'  // <10>
+  middlePassword = 'xxx'  // <11>
+
+  comment = ''  // <12>
+}
+
+githubFlow {
+  topic = 'feature_xx'  // <13>
+}
+----
+<1> ローカルレポジトリを作成するフォルダ名
+<2> バージョン管理対象のファイル名やフォルダを指定する。
+<3> gitのユーザ名
+<4> gitのメールアドレス
+<5> GitHub等の Remote Repository。最初は空の Repositoryを作成する。
+<6> このユースケースでは不要。
+<7> GitHub(またはGitBucket等)のアカウント名
+<8> GitHub(またはGitBucket等)のパスワード
+<9> プライベートな Gitサーバへの URL
+<10> プライベートな Gitサーバのアカウント名
+<11> プライベートな Gitサーバのパスワード
+<12> commitするときのコメント。随時、commit時に記載する。
+<13> branchを作成するときの branch名
+====
 
 .Initialize, add, commit, push to Private Git Server. (a)(b)(c)(d)
 ====
