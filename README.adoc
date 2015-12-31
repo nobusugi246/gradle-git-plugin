@@ -120,6 +120,14 @@ $ gradle --daemon -b git.gradle clone middlePush
 ====
 
 
+.Push to Github Server. (i)
+====
+----
+$ gradle --daemon -b git.gradle push
+----
+====
+
+
 .Sync a fork. (Fetch upstream repository(Original Repository) and merge it.) (j)(h)
 ====
 ----
@@ -140,14 +148,6 @@ $ gradle --daemon -b git.gradle initG add commit middlePush
 ====
 ----
 $ gradle --daemon -b git.gradle initTP  (abbrev. of "initThenPush")
-----
-====
-
-
-.Push to Github Server. (i)
-====
-----
-$ gradle --daemon -b git.gradle push
 ----
 ====
 
