@@ -41,13 +41,6 @@ image::https://raw.githubusercontent.com/nobusugi246/gradle-jgit-plugin/master/r
 * (j)(h) オリジナルのレポジトリ(Original Repository)で、
   修正・更新されたコードを取り込むために、fetchし mergeする。
 
-新規に開発したコードを公開する場合。
-
-* (k)(d)(e)(f)(i) GitHub(またはGitBucket等)には空のレポジトリを作成しておく。
-  ローカルで作成したコードを対象に、レポジトリを作成((k) init)し、
-  ファイルの追加((d) add)、登録((e) commit)、
-  プライベートなサーバに(f) pushして確認、問題無ければ公開((i) push)する。
-
 この DSLの記載例を以下に示します。
 
 [source, groovy]
@@ -139,6 +132,19 @@ $ gradle --daemon -b git.gradle sync
 .Big Picture of another Use Case.
 image::https://raw.githubusercontent.com/nobusugi246/gradle-jgit-plugin/master/readme_images/anotherUseCase.png[width=700]
 
+新規に開発したコードを公開する場合。
+
+* GitHub(またはGitBucket等)には空のレポジトリを作成しておく。
+  ローカルで作成したコードを対象に、レポジトリを作成((a) init)し、
+  ファイルを追加((b) add)、コミット((c) commit)、
+  プライベートなサーバに(d) pushして確認、
+  問題無ければ GitHubに(g) pushする。
+* GitHubや GitBucketでは、必要に応じて pull requestを作成する。
+  他のメンバからの pushによるコードの登録があれば、
+  (e)/(h) fetchして (f) mergeを行なう。
+* ローカルレポジトリで機能開発や不具合修正は、
+  (i) branchを作成して行なう。(GitHub Flow等)
+
 
 .Initialize, add, commit, push to Private Git Server. (a)(b)(c)(d)
 ====
@@ -148,7 +154,7 @@ $ gradle --daemon -b git.gradle initG add commit middlePush
 ====
 
 
-.Initialize, add, commit, push to GitHub Server. (k)(d)(e)(i)
+.Initialize, add, commit, push to GitHub Server. (a)(b)(c)(g)
 ====
 ----
 $ gradle --daemon -b git.gradle initTP  (abbrev. of "initThenPush")
