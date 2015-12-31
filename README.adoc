@@ -23,7 +23,7 @@ GitHub Flowは小さいチームに別れて行なうWebアプリケーション
 .Big Picture of a Use Case.
 image::https://raw.githubusercontent.com/nobusugi246/gradle-jgit-plugin/master/readme_images/aUseCase.png[width=700]
 
-"fork"により開発を初める場合となる。
+"fork"により開発を初める場合となります。
 
 * (a) GitHubやGitBucket等のレポジトリにて、
   機能拡張や不具合修正の対象となる、オリジナルのレポジトリ(Original Repository)を forkし、
@@ -132,7 +132,7 @@ $ gradle --daemon -b git.gradle sync
 .Big Picture of another Use Case.
 image::https://raw.githubusercontent.com/nobusugi246/gradle-jgit-plugin/master/readme_images/anotherUseCase.png[width=700]
 
-新規に開発したコードを公開する場合となる。
+新規に開発したコードを公開する場合となります。
 
 * GitHub(またはGitBucket等)には空のレポジトリを作成しておく。
   ローカルで作成したコードを対象に、レポジトリを作成((a) init)し、
