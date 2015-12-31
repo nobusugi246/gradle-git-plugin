@@ -136,7 +136,11 @@ $ gradle --daemon -b git.gradle sync
 ====
 
 
-.Initialize, add, commit, push to Private Git Server. (k)(d)(e)(f)
+.Big Picture of another Use Case.
+image::https://raw.githubusercontent.com/nobusugi246/gradle-jgit-plugin/master/readme_images/anotherUseCase.png[width=700]
+
+
+.Initialize, add, commit, push to Private Git Server. (a)(b)(c)(d)
 ====
 ----
 $ gradle --daemon -b git.gradle initG add commit middlePush
