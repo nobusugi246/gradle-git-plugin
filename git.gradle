@@ -9,11 +9,11 @@ git {
 
   remote   = ''
   upstream = ''
-  acount = ''
+  account = ''
   password = ''
 
   middle = ''
-  middleAcount = ''
+  middleAccount = ''
   middlePassword = ''
 
   comment = ''
@@ -125,7 +125,7 @@ class JGitPlugin implements Plugin<Project> {
       def git = getGitInstance(project.git.repository)
       git.push()
          .setPushAll()
-         .setCredentialsProvider(new UsernamePasswordCredentialsProvider(project.git.acount, project.git.password))
+         .setCredentialsProvider(new UsernamePasswordCredentialsProvider(project.git.account, project.git.password))
          .call()
     }
     project.tasks.push.description = 'Pushes to remote repository.'
@@ -146,7 +146,7 @@ class JGitPlugin implements Plugin<Project> {
       git.push()
          .setRemote(project.git.middle)
          .setPushAll()
-         .setCredentialsProvider(new UsernamePasswordCredentialsProvider(project.git.middleAcount,
+         .setCredentialsProvider(new UsernamePasswordCredentialsProvider(project.git.middleAccount,
                                                                          project.git.middlePassword))
          .call()
     }
@@ -306,10 +306,10 @@ class JGitPluginExtension {
   String upstream
   String user_name
   String user_email
-  String acount
+  String account
   String password
   String middle
-  String middleAcount
+  String middleAccount
   String middlePassword
   ArrayList<String> filepattern
 }
