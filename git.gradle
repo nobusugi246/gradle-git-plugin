@@ -28,10 +28,11 @@ githubFlow {
 // ======== ======== ======== ======== ======== ======== ======== ========
 // -------- -------- -------- -------- -------- -------- -------- --------
 // https://github.com/centic9/jgit-cookbook/tree/master/src/main/java/org/dstadler/jgit
-// http://download.eclipse.org/jgit/site/4.1.1.201511131810-r/apidocs/index.html
+// http://download.eclipse.org/jgit/site/4.6.0.201612231935-r/apidocs/index.html
 
 buildscript {
-  ext { jgitVersion = '4.5.0.201609210915-r' }
+  ext { jgitVersion = '4.6.0.201612231935-r' }
+
   repositories { mavenCentral() }
   dependencies {
     classpath "org.eclipse.jgit:org.eclipse.jgit:${jgitVersion}"
