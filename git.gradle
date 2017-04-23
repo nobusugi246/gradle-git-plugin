@@ -31,7 +31,7 @@ githubFlow {
 // http://download.eclipse.org/jgit/site/4.6.0.201612231935-r/apidocs/index.html
 
 buildscript {
-  ext { jgitVersion = '4.6.0.201612231935-r' }
+  ext { jgitVersion = '4.7.0.201704051617-r' }
 
   repositories { mavenCentral() }
   dependencies {
